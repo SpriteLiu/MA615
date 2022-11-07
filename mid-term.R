@@ -44,8 +44,7 @@ s1 <- filter(strawb, State == 'CALIFORNIA' &
                Year == 2016 & 
                Domain == 'ORGANIC STATUS')
 c1 <- as.numeric(s1$Value)
-t.test(c1)
-#(-39779720,194947329)
+#(231304956-13.7,231304956+13.7)
 
 #3
 s2 <- filter(strawb, State == 'CALIFORNIA' & 
@@ -54,9 +53,7 @@ s2 <- filter(strawb, State == 'CALIFORNIA' &
 s2 <- filter(s2, Value != "(NA)" & 
          Value != "(D)" & 
          Domain != "TOTAL")
-c2 <- as.numeric(s2$Value)
-t.test(c2)
-#(-10378.79,199946.13)
+#NA
 
 #4
 unique(strawb[10])
@@ -65,7 +62,7 @@ s3 <- filter(strawb, Domain != 'ORGANIC STATUS' &
 a <- grep("TOTAL",
      s3$`Domain Category`,
      ignore.case = T)
-unique(s3[11])
+a <- unique(s3[11])
 #175-36=139
 
 #5
