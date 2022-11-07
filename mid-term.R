@@ -63,7 +63,7 @@ unique(strawb[10])
 s3 <- filter(strawb, Domain != 'ORGANIC STATUS' & 
                      Domain != 'TOTAL')
 a <- grep("TOTAL",
-     chemical$`Domain Category`,
+     s3$`Domain Category`,
      ignore.case = T)
 unique(s3[11])
 #175-36=139
