@@ -1,0 +1,113 @@
+---
+title: "problemSet_2"
+author: "Hsueh-Pin Liu"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Fuel Economy
+Before we start, lets summary first.
+```{r}
+vehicles <- read.csv("~/Desktop/MA 615 Homework/vehicles.csv", header=TRUE)
+summary(vehicles)
+```
+Now we have a first impression of the dataset.First, let's check the hybrid cars.
+```{r}
+m1 <- vehicles[vehicles$phevBlended == 1,
+c("year", "make", "model", "mpgData","phevBlended", "fuelType")]
+m1
+```
+And let's see how many hybrid cars are there.
+```{r}
+vehicles$phevBlended <- as.logical(vehicles$phevBlended)
+sum(vehicles$phevBlended)
+```
+Do it again to calculate electric cars.
+```{r}
+vehicles$highwayE <- as.logical(vehicles$highwayE)
+sum(vehicles$highwayE)
+```
+Among the 45471 vehicles, only 219+674 are either hybric or electric, which is a rather small amount. So as the question mentioned, we can ignore hybrids and electric vehicles under analysis.
+```{r}
+library(ggplot2)
+p1 <- ggplot(vehicles,aes(x=fuelType))+geom_bar(fill='#CF6A1A',colour="black")+theme_bw()
+print(p1)
+```
+As the plot shows, most of the vehicles use regular and permium fuel type, we can now analysis the price.
+```{r}
+m2 <- vehicles[vehicles$fuelType == "Regular",
+c("fuelType","fuelCost08")]
+summary(m2)
+```
+```{r}
+m3 <- vehicles[vehicles$fuelType == "Premium",
+c("fuelType","fuelCost08")]
+summary(m3)
+```
+```{r}
+plot(vehicles$year,vehicles$fuelCost08,pch=20,cex=0.8)
+```
+2.
+Now for the vehicle makers.
+```{r}
+p1 <- table(vehicles[,'make'])
+barplot(p1)
+```
+There are too many vehicle makers to see in the plot, so we just show p1.
+```{r}
+print(p1)
+```
+As a result, Chevrolet sell the most cars, and BMW, Dodge, Ford, GMC,Toyota also sell over 2000 cars in the past 40 years.
+
+## NASDAQ Composite
+```{r}
+# Libraries we need
+library(tidyverse)
+library(tidyquant)
+
+IXIC21.22 <- read.csv("~/Desktop/MA 615 Homework/IXIC21-22.csv")
+ggplot(data=`IXIC21.22`,aes(x = Date, y = Close))+geom_candlestick(aes(open=Open,high=High,low=Low,close=Close))+
+  labs(titles=" Candlestick chart",y="Close",x="Date")+theme_tq()
+
+```
+## Rural Capacity Index
+```{r}
+library(ggplot2)
+library(GGally)
+ruralCapacityData <- read.csv("~/Desktop/MA 615 Homework/ruralCapacityData.csv")
+plot(ruralCapacityData$pop_bachelors,ruralCapacityData$cap_index,pch=20,xlab="The Rural Capacity Index",ylab="Population with a bachelors degree")
+```
+As the plot shows, there is a dot on the top right corner which makes all the other dots are on the left side, it is the Bernillio County, so as the problem mentioned, we should omit it and do this again.
+```{r}
+plot(ruralCapacityData$pop_bachelors[2:33],ruralCapacityData$cap_index[2:33],pch=20,xlab="Population with a bachelors degree",ylab="The Rural Capacity Index")
+```
+```{r}
+plot(ruralCapacityData$num_fam[2:33],ruralCapacityData$cap_index[2:33],pch=20,xlab="Number of families",ylab="The Rural Capacity Index")
+```
+```{r}
+plot(ruralCapacityData$tot_house[2:33],ruralCapacityData$cap_index[2:33],pch=20,xlab="Total Households",ylab="The Rural Capacity Index")
+```
+```{r}
+plot(ruralCapacityData$pop_insured[2:33],ruralCapacityData$cap_index[2:33],pch=20,xlab="Population with health insurance",ylab="The Rural Capacity Index")
+```
+We can see that the plots above shows the same trend, which means when these variables is over a specific number, the rural capacity index can be at least 80 or even higher.
+2.
+```{r}
+plot(ruralCapacityData$house_broadband[2:33],ruralCapacityData$per_over_25_with_bach[2:33],pch=20,xlab="Total households with broadband connection",ylab="Percent of population 25 and over with a bachelors degree")
+title(main="Houses with broadband vs.adults with bachelor degrees")
+```
+3.
+```{r}
+par(mfrow=c(1,3))
+plot(ruralCapacityData$pop_total[ruralCapacityData$pop_total<16000],ruralCapacityData$cap_index[ruralCapacityData$pop_total<16000],pch=20,xlab="Total Population",ylab="The Rural Capacity Index")
+title(main="Total population<16000")
+plot(ruralCapacityData$pop_total[16000<ruralCapacityData$pop_total&ruralCapacityData$pop_total<55000],ruralCapacityData$cap_index[16000<ruralCapacityData$pop_total&ruralCapacityData$pop_total<55000],pch=20,xlab="Total Population",ylab="The Rural Capacity Index")
+title(main="16000<Total Population<55000")
+plot(ruralCapacityData$pop_total[ruralCapacityData$pop_total>55000],ruralCapacityData$cap_index[ruralCapacityData$pop_total>55000],pch=20,xlab="Total Population",ylab="The Rural Capacity Index")
+title(main="Total population>55000")
+```
+When the total population is below 16000, the rural capacity index can't even reach 80. When the total population is between 16000 and 55000, most of the rural capacity index are over 80. When the total population is over 55000, the rural capacity index is all higher than 80. So as the total population grows, the rural capacity index broadly increases.
